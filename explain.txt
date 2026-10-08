@@ -1,0 +1,618 @@
+SQL: structured query language 
+->Create db 
+->Insert data 
+->Retrive the data 
+->Update 
+->delete 
+->Manage the transactions 
+
+Categories:
+1.DDL->Data Definition language
+CREATE,ALTER,DROP,TRUNCATE 
+
+2.DML->Data Manipulation Language 
+INSERT,DELETE,UPDATE 
+
+3.DQL->Data Query Language 
+SELECT 
+
+4.TCL->transaction control language
+COMMIT,ROLLBACK,SAVEPOINT
+
+5.DCL->Data Control Language 
+GRANT,REVOKE 
+
+DataType
+int 
+varchar 
+decimal 
+date 
+boolean
+
+3 types -- DBMS
+1.Three schema Architecture 
+  -->Data abstraction and independence 
+
+       External level
+            |
+      view-1 view2 view3(View level)
+      -->closest to the users 
+            |
+    Conceptual Level(Logical level)  
+    defines overall logical structure of db
+    1.tables
+    2.columns 
+    3.relationships 
+    4.constraints 
+    5.keys 
+    6.data types
+    7.relationship between entities 
+                      |
+         Physical Level(Internal level)
+         1.data files 
+         2.storage blocks 
+         3.record layouts 
+         4.indexes 
+         5.buffer management 
+         7.B+ trees             
+
+
+
+ Example:college 
+
+ student-view, admin-view
+ 1.attendance  1.Management 
+ 2.sub
+ 3.marks 
+
+ CREATE VIEW student_public As 
+ SELECT stud_id,name,attendance FROM student.
+
+
+
+2.Functional Architecture (Internal)
+
+                     APlication 
+                         |
+                     SQL Query 
+                         |
+                   Query Processor 
+                   /     |         \
+                Parser  optimizer  Executor
+                         |
+                   Storage Manager 
+                   /        |       \-->Buffer Manager
+                 File mangr transaction
+                            mngr         
+                         |
+                   Physical Storage 
+                   /      |       \
+                Tables   Indexes  Logs         
+
+
+
+3.3 tier-Architecture(Deployment)
+
+1-tier
+
+user 
+  |
+Application+database 
+LocalMysql+Application
+
+2-tier
+
+Client 
+   |
+Database Server 
+
+Ex: desktop app ->mysql 
+
+3-tier 
+
+Client 
+   |
+Application server 
+   |
+ Database      
+
+Ex:
+React 
+  |
+Express/Node 
+  |
+mongodb/Mysql
+
+Types of attributes:
+1.Simple attribute
+Cannot be divided further  
+
+Age
+
+or 
+
+2.Composite attribute:
+
+Address:
+hno
+city 
+state 
+
+Name:
+1.First_name 
+2.Last_name 
+
+Never store all 
+attributes in single column
+
+3.Single valued attribute 
+student_id 
+dob
+
+4.Multi valued attribute 
+
+Phone number 
+32145678
+32456789
+
+5.derived attributes 
+
+dob-->age 
+
+6.Key attribute:
+student_id
+name 
+email
+
+student_id -->key
+
+Relationships:
+The connection btw entities 
+is called relationship
+
+student enrolls in course 
+
+relationship degrees:
+1.Unary relationship:(recursive relationship)
+
+employee - manages - employee
+
+2.Binary Relationship
+two diff entity participated
+
+Students - enrolled - course 
+degree = 2
+
+3.Ternary Relationship:
+
+Three entity types 
+
+      Supplier 
+          |
+       Supplies 
+       /     \
+     Product Project 
+
+degree = 3 
+
+cardinality:
+describes how many entities of 
+one type can be associated with other 
+entities
+
+The main types:
+1. 1 to 1
+     1 person --> 1 passport 
+2. 1 to N 
+     1 dept --> mul employees 
+3. N to 1 
+     mul employees --> 1 dept
+
+4. M to N 
+     Many entities in the both sides
+
+     Student ---> course 
+
+     Relational db -->foreign key 
+     Bridge table/junction -->to achieve 
+
+
+Example:
+
+Student 
+
+student_id  name 
+101         Priya
+102         rajesh 
+
+course table:
+Course_id name 
+1001      ece 
+1002      cse 
+
+Enrollment table(junction table)
+
+student_id course_id 
+101         1001
+102         1002
+
+Participation:
+entity must participate in some relationship
+Total_Participation:
+must --in relationship
+Ex:
+emp ->manages -> emp
+
+Partial Participation:
+may or may not 
+
+
+Normalization:
+
+process of organizing data in database 
+tables so that:
+1.duplicate data is reduced 
+2.Data is stored in a correct table 
+3.Data remains consistent 
+4.Insert,delete,update problems are avoided
+    
+Why Normalization:
+1.Update Anomaly:
+multiple records with the same name 
+mul places and udating it requires changing mul 
+records 
+
+2.Insert Anomaly:
+
+3.Delete Anomaly:
+
+
+Functional dependency:
+
+x -> y -->Result/dependent attribute 
+determinant
+rollno --> name 
+
+roll: 101 
+name: "Raju"
+
+roll -> name 
+101->raju
+
+rollno ->name,branch,result
+
+composite key:
+(student_id,course_id) -> marks
+
+First Normal form 1NF:
+rule:one cell should
+ contain one value(atomic values)
+
+Student_id | Name | Syllubus 
+101       |  Rajesh | python
+101        | Rajesh | java
+
+2NF:Second normal form
+Rule:
+1NF+
+No Partial dependency
+
+student_id -> student_name alone
+course_id -> course_name  alone 
+
+composite:
+(student_id,course_id) 
+
+Third Normal form:3NF
+Rule:
+1NF -->atomic values
++
+2NF -->No partial dependency 
++
+No trasitive dependency
+
+x -> y ->z
+x->z 
+
+student_id ->dept_id 
+
+dept->dept_name 
+
+student_id ->dept_name
+(transitive dependency)
+
+Boyce-codd normal form:
+Stronger version of 3NF 
+
+Rule:
+for every functional dependency 
+   x -> y , x must be super key
+   |
+   Super key
+
+Every determinant should be a super key 
+
+Example:
+
+Student_id ->student_name 
+    |
+ Super key ->if yes good 
+             else:
+                voilation of bcnf
+
+->all bcnf tables in 3nf 
+->all 3nf will not be in bcnf
+
+
+Example:
+composite key:
+(student_id,course_id)-->partial dependency exist 
+
+
+
+ joins:
+
+ A join is used to combine data 
+ from two or more tables based on 
+ related column
+
+ employees.dept_id
+
+related to 
+ 
+ departments.dept_id
+
+ table_name.common_key = 2nd.common_key
+ employees.dept_id =  departments.
+ 
+ Syntax:
+ select columns 
+ from table 1 
+ join table 2 
+ on 
+ table1.common_column =
+          table2.common_column
+
+Types of joins:
+1.Inner join 
+2.left join 
+3.right join 
+4.full outer join 
+5.cross join 
+6.self join   
+
+1.Inner join 
+matching rows from both tables 
+
+2.Left join 
+All employees even if they dont 
+have a department 
+-->Keeps everything from left table
+returns null if no matching found 
+
+Task1:
+Find the employees
+ who dont belong 
+to any valid department
+
+Right join:
+keep all rows from  right table 
+matching rows from left or return
+ null if 
+not found
+
+Full outer join:
+
+return all the rows
+ from both 
+tables
+
+Mysql -->not directly supported
+
+full outer join =
+ leftjoin union right join 
+
+ cross join:
+ every possible combination of rows 
+ from both tables 
+
+ emp
+ emp_id|emp_name 
+ 1       Rahul
+ 2       rajesh
+
+dept 
+ dept_id |  dept_name
+ 100        cse 
+ 200        csd
+
+ 2*2 = 4
+
+ self join:
+ joining the table with itself
+ 
+ emp_id | name|manager_id
+
+ Task:
+ find the employees 
+ from IT department 
+
+ Task:
+ find employees from CSE 
+ dept whose salary is greater 
+ than 60k
+
+ Task:
+ Second highest salary 
+
+ offset 1 ==>skips one record
+ limit 1 ==>takes the next record
+
+ Transaction:
+ A transaction is a sequence of database 
+ operations that performs one complete 
+ logical unit of task
+
+ A = A-5000
+ B = B+5000
+ one logical unit of work
+
+ Both operations -->one unit 
+ if both succeed:
+     Successful
+ else:
+     undo the change 
+
+Why transactions:
+
+Rahul= 10000
+Priya = 5000
+
+Rahul tansfers 3000 to priya 
+
+rahul = 10000-3000
+rahul = 7000
+
+Priya = 5000+3000
+Priya = 8000
+
+Toatal: 15000
+
+3000-priya 
+
+rahul:7000
+priya:5000
+
+transaction = one complete 
+logical unit of work 
+
+ACID PROPERTIES:
+
+A-Atomicity 
+All operations happen
+         Or 
+None of them happen
+
+Example:
+A = A-5000
+B= B+5000
+
+C-Consistency :
+db moves from one valid state - another valid state 
+A = 5000
+B = 5000  t= 10000
+
+A=5000-1000 4000
+B=5000+1000 6000 t= 10000
+
+consistency --> constraints 
+salary = -5000
+salary decimal(10,2) check(salary>0)
+db should reject invalid operations 
+
+I-Isolation 
+multiple transactions
+ executing at the same time 
+ should not improperly interfere
+  with each other
+
+  Example:
+  Available = 1
+
+  T1:
+  Book ticket 
+  T2:
+  Book ticket 
+
+  concurrency issue:
+  Isolation
+
+D-Durability 
+once a transaction is commited 
+its changes should survive a subsequent 
+system failure subject to the database 
+recovery mechanism 
+
+A = all or nothing 
+C = correct/valid state 
+I = Independent Execution 
+D = Data survives
+
+Transaction States:
+1.Active:
+When a transaction starts executing 
+2.Partially commited 
+3.commited 
+4.Failed 
+5.Aborted 
+6.Terminated 
+
+Serializability:
+
+concurrent schedule ->serial execution
+
+Types of serializability:
+1.conflict serializability
+2.view serializability
+
+conflict:
+1.they belong to different transactions 
+2.They access same data item 
+3.At least one operation as write 
+
+READ - READ  - NO CONFLICT
+READ - WRITE 
+WRITE - READ 
+WRITE - WRITE
+
+
+Conflict Serializability:
+transformed into serial schedule 
+by swapping non conflicting operations 
+
+Precedence graph :
+Nodes:Transactions 
+edges:ordering dependencies 
+caused by conflicts
+
+Step1:Identify all the transactions 
+Step2:Look for the conflicting operations 
+step3:determine 
+
+select max(salary) from employees
+    -> where salary <(
+    ->     60000
+    -> );
+-->55000
+
+find the employee who
+ earns second highest 
+ salary
+
+      select * from employees
+    -> where salary =45000( #rahul
+    ->     select max(salary)#45000
+    ->     from employees
+    ->     where salary <(50000
+    ->         select max(salary) #50000
+    ->         from employees)
+    -> );
+Types of subqueries:
+1.Scalar subquery 
+2.single-row subquery 
+3.multi row subquery
+4.correlated subquery 
+5.Exist/Exists 
+
+
+Find employees earning
+ more than the average salary  
+
+ Find the department that 
+ have atleast one employee  
+
+ Agent workflows:no code 
+ 1.n8n 
+ 2.flowise 
+ 3.zapier 
+ 4.make.com hi 
